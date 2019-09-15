@@ -1,0 +1,80 @@
+## Redis数据类型
+
+- ### redis-key
+  - set 键名 键值: 向数据库中存储键值对;
+  - keys *: 查看当前数据库所有键;
+  - exits 键名: 判断某个key是否存在,存在,返回"1";不存在,返回"0";
+  - move 键名 数据库(例如2): 将某个键剪切至2号数据库;
+  - expire key 秒: 为指定的key设置过期时间;
+  - ttl key: 查看该key,还有多少秒过期,`-1`表示永不过期, `-2`表示已过期;
+  - type key: 查看key的类型;
+
+- ### redis-5大数据类型
+
+  - String(字符串)
+    - set/get/del 键: 设置/获取/删除;
+    - append 键名(key) 值`: 向key所对应的value后面添加值;
+    - strlen 键名(key): 获取某个key所对应的value的字符串长度;
+    - incr/decr/incrby/decrby: 一定要是数字才能进行加减;
+    - getrange k2 0 3: 表示获取k2所对应的value的前四个字符;
+    - setrange: 设置指定区间范围内的值;
+    - setex(set with expire) 秒: 设置过期时间;
+    - setnx(set if not exist)
+    - mset/mget/msetnx: 设置(获取)多个, 例,`mset k2 v2 k3 v3 k4 v4`;
+    - getset: 先get再set;
+  - List(列表)
+    - LPUSH list01 1 2 3 4 5: 存储list; "LPUSH(Left push)"
+    - LRANGE list01: 获取,"5,4,3,2,1";
+    - RPUSH list02 1 2 3 4 5
+    - LRANGE list02`: 获取, "1 2 3 4 5"
+    - LPOP/RPOP`
+    - LINDEX: 按照索引下标获得元素(从上到下);
+    - LLEN: 获取list集合的长度;
+    - RUPUSH list03 1 1 1 2 2 2 3 3 3 4 4 4 5 6 7`
+       `LREM list03 2 3: 删除list03集合中两个3(LREM, left remove);
+    - LTRIM list03 0 4: 截取指定范围(0~4)的值,然后赋值给list03;
+    - RPOPLPUSH 源列表 目的列表
+    - LSET list03 1 x: 将list03中的下标为1的键的值设置为"x";
+    - LINSERT list03 before(after) x java: 在"x"的前面(或后面)插入"java";
+  - Set(集合)
+    - SADD set01 1 1 2 2 3 3: 向set01中插入值,只会插入"1 2 3",即不允许重复;
+    - SMEMBERS set01: 获取set01集合中的值
+    - SISMEMBER set01 1: 判断"1"是否为集合set01成员; 如果是,返回1;不是,返回0;
+    - SCARD: 获取集合里面元素个数;
+    - SREM key member[memeber...]:移除集合key中的一个或多个memeber元素;
+    - SRANDMEMEBER set01 3: 从set01集合中随机取三个值;
+    - SPOP set01:从set01集合中,随机移除一个元素,并返回该元素;
+    - SMOVE source destination memeber: 将 memeber 元素从source集合移动到destination集合;
+    - SDIFF: 差集;
+    - SINTER: 交集;
+    - SUNION: 并集;
+  - Hash(哈希表)
+    - 类似于Map<String,Object>;
+    - KV模式不变,但V是一个键值对;
+    - hset user gender male: 将 user 哈希表中的gender值设为male;
+    - hget user gender: 获取;
+    - hmset customer id 11 name zhangsan age 22:同时将多个field-value(域-值)对设置到哈希表customer中
+    - hmget customer id name age: 获取多个值;
+    - hgetall custome: 获取所有的域和值;
+    - hdel customer id name: 删除哈希表中的id和name域;
+    - hlen custome`:获取哈希表的长度;
+    - hexists customer id: 查看哈希表customer中是否存在id域;
+    - hkeys customer: 获取哈希表customer中的所有域;
+    - hvalues customer: 获取哈希表customer中的所有域的值;
+    - hincryby key field increment: 为哈希表key中的域field的值加上增量increment;
+    - hincrbyfloat
+    - hsetnx key field value: 当域field不存在时,将该域field的值设置为value;
+  - Sorted Set(有序集合)
+    - Zset 在set基础上,加上一个score值;之前set集合是:k1 v1 v2 v3,现在,sorted set是 k1 score1 v1 score2 v2
+    - zadd key score1 mem1 score2 mem2:将一个或多个memeber元素及其score的值加入到有序集key当中;
+    - zrangebyscore key 开始min 结束max: 返回有序集key中,所有score介于min和max之间;
+    - zrangebysroce zset (1 5: 返回所有符合条件 1<score<=5 的成员;
+    - zrem key memeber: 移除有序集key中的一个或多个成员;
+    - zcard key: 返回有序集合key的基数;
+    - zcount key min max: 返回有序集key中,score值在min和max之间的成员数量;
+    - zrank key member: 返回有序集key中成员memeber的下标;
+    - zscore key member: 返回有序集key中,成员memeber对应的score值;
+    - zrevrank key member: 逆序获得成员member下标值;
+    - zrevrange key 0 -1: 逆序获得有序集key的所有的member成员;
+    - zrevrangebyscore
+  - ![1568443442642](C:\Users\侯泽明\AppData\Roaming\Typora\typora-user-images\1568443442642.png)
